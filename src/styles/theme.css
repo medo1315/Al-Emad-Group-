@@ -1,0 +1,271 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+
+  /* AL EMAD GROUP Brand Colors - Premium Organic Olive Theme */
+  --olive-green: #556B2F;
+  --olive-green-dark: #3D4F1F;
+  --olive-green-light: #8BA888;
+  --sage-green: #A4B36D;
+  --sage-green-light: #C5D19E;
+  
+  /* Deep Earth Wood replacing Petroleum */
+  --petroleum-blue: #4A3B2C;
+  --petroleum-dark: #2A2118;
+  --petroleum-light: #6B5640;
+  
+  --dark-olive: #161C12;
+  --light-olive: #9ACD32;
+  
+  /* Olive Gold replacing Teal */
+  --teal-dark: #B8860B;
+  --teal-accent: #D4AF37;
+  
+  --earth-brown: #3E2723;
+  --gold-accent: #DAA520;
+  --gold-light: #F4D03F;
+  --soft-beige: #FAF8F3;
+  --warm-sand: #E8DCC4;
+
+  /* Semantic Colors - Dark Theme */
+  --background: var(--dark-olive);
+  --foreground: #E8F0E8;
+  --card: var(--petroleum-dark);
+  --card-foreground: #E8F0E8;
+  --popover: var(--petroleum-dark);
+  --popover-foreground: #E8F0E8;
+  --primary: var(--olive-green);
+  --primary-hover: var(--olive-green-light);
+  --primary-foreground: #ffffff;
+  --secondary: var(--petroleum-blue);
+  --secondary-hover: var(--petroleum-light);
+  --secondary-foreground: #ffffff;
+  --muted: var(--olive-green-dark);
+  --muted-foreground: #B8C9B8;
+  --accent: var(--teal-accent);
+  --accent-foreground: #ffffff;
+  --destructive: #C44536;
+  --destructive-foreground: #ffffff;
+  --success: #4A7C59;
+  --success-foreground: #ffffff;
+  --warning: var(--gold-accent);
+  --warning-foreground: #ffffff;
+  --border: rgba(142, 188, 143, 0.15);
+  --border-light: rgba(142, 188, 143, 0.08);
+  --input: transparent;
+  --input-background: rgba(28, 36, 22, 0.5);
+  --switch-background: var(--petroleum-dark);
+
+  /* Typography */
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Effects */
+  --ring: var(--olive-green);
+  --shadow-sm: 0 1px 2px 0 rgba(45, 51, 25, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(45, 51, 25, 0.1), 0 2px 4px -1px rgba(45, 51, 25, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(45, 51, 25, 0.1), 0 4px 6px -2px rgba(45, 51, 25, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(45, 51, 25, 0.1), 0 10px 10px -5px rgba(45, 51, 25, 0.04);
+
+  /* Charts */
+  --chart-1: var(--teal-accent);
+  --chart-2: var(--olive-green-light);
+  --chart-3: var(--gold-accent);
+  --chart-4: var(--petroleum-light);
+  --chart-5: var(--sage-green);
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+  --radius: var(--radius-md);
+
+  /* Sidebar - Dark Theme */
+  --sidebar: var(--petroleum-dark);
+  --sidebar-foreground: #E8F0E8;
+  --sidebar-primary: var(--teal-accent);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--olive-green);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(142, 188, 143, 0.15);
+  --sidebar-ring: var(--teal-accent);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  --color-olive-green: var(--olive-green);
+  --color-olive-green-dark: var(--olive-green-dark);
+  --color-olive-green-light: var(--olive-green-light);
+  --color-sage-green: var(--sage-green);
+  --color-sage-green-light: var(--sage-green-light);
+  --color-petroleum-blue: var(--petroleum-blue);
+  --color-petroleum-dark: var(--petroleum-dark);
+  --color-petroleum-light: var(--petroleum-light);
+  --color-dark-olive: var(--dark-olive);
+  --color-light-olive: var(--light-olive);
+  --color-teal-dark: var(--teal-dark);
+  --color-teal-accent: var(--teal-accent);
+  --color-earth-brown: var(--earth-brown);
+  --color-gold-accent: var(--gold-accent);
+  --color-gold-light: var(--gold-light);
+  --color-soft-beige: var(--soft-beige);
+  --color-warm-sand: var(--warm-sand);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /**
+  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
+  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
+  */
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.animate-page-fade-in {
+  animation: page-fade-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
