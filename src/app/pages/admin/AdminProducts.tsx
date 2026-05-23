@@ -145,8 +145,8 @@ export function AdminProducts() {
       nameAr: "",
       description: "",
       descriptionAr: "",
-      price: 24.99,
-      image: "https://images.unsplash.com/photo-1759749597861-e90685f026b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800",
+      price: 250,
+      image: "",
       category: "extra-virgin",
       categoryAr: "extra-virgin",
       inStock: true,
@@ -155,17 +155,8 @@ export function AdminProducts() {
       rating: 5.0,
       stock: 50,
     });
-    setSizesList([
-      { size: "250ml", price: 14.99 },
-      { size: "500ml", price: 24.99 },
-      { size: "750ml", price: 34.99 },
-      { size: "1L", price: 42.99 }
-    ]);
-    setImagesList([
-      "https://images.unsplash.com/photo-1759749597861-e90685f026b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800",
-      "https://images.unsplash.com/photo-1760445528823-fd942d4b459b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800",
-      "https://images.unsplash.com/photo-1759749597905-e2fed85d8cd5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800"
-    ]);
+    setSizesList([]);
+    setImagesList([]);
     setBenefitsList([
       { text: "Free shipping on orders over EGP 500", textAr: "شحن مجاني للطلبات فوق 500 ج.م" },
       { text: "100% satisfaction guarantee", textAr: "ضمان رضا 100%" },
