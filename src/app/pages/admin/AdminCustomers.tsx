@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../context/AuthContext";
 import { Search, Mail, Phone, Calendar, Loader2, DollarSign, ShoppingBag, Eye, X, Package, ShieldCheck } from "lucide-react";
+import { formatPrice } from "../../utils/currency";
 import { API_BASE_URL } from "../../config";
 import { toast } from "sonner";
 
@@ -225,7 +226,7 @@ export function AdminCustomers() {
                         <DollarSign className="w-3.5 h-3.5" />
                         <span>{isRtl ? "المشتريات" : "Spent"}</span>
                       </p>
-                      <p className="text-lg text-teal-accent font-bold">${customer.totalSpent.toFixed(2)}</p>
+                      <p className="text-lg text-teal-accent font-bold">{formatPrice(customer.totalSpent, language)}</p>
                     </div>
                   </div>
 
@@ -299,7 +300,7 @@ export function AdminCustomers() {
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}>
                             {getStatusText(order.status)}
                           </span>
-                          <span className="text-white font-bold text-lg">${order.totalAmount.toFixed(2)}</span>
+                          <span className="text-white font-bold text-lg">{formatPrice(order.totalAmount, language)}</span>
                         </div>
                       </div>
 

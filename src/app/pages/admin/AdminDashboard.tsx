@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router";
+import { formatPrice } from "../../utils/currency";
 import {
   TrendingUp,
   ShoppingCart,
@@ -141,8 +142,8 @@ export function AdminDashboard() {
   const stats = [
     {
       label: t.totalSales,
-      value: `$${analytics?.totalSales.toLocaleString() || "0"}`,
-      change: t.averageOrder + ` $${analytics?.averageOrderValue.toFixed(0) || "0"}`,
+      value: analytics ? formatPrice(analytics.totalSales, language) : (isRtl ? "0 ج.م" : "EGP 0"),
+      change: t.averageOrder + " " + (analytics ? formatPrice(analytics.averageOrderValue, language) : (isRtl ? "0 ج.م" : "EGP 0")),
       icon: DollarSign,
       color: "from-teal-accent to-sage-green",
     },
@@ -223,7 +224,7 @@ export function AdminDashboard() {
                   color: "#FAF8F3"
                 }}
               />
-              <Bar key="bar-revenue" dataKey="sales" fill="#D4AF37" radius={[8, 8, 0, 0]} name={isRtl ? "المبيعات ($)" : "Sales ($)"} />
+              <Bar key="bar-revenue" dataKey="sales" fill="#D4AF37" radius={[8, 8, 0, 0]} name={isRtl ? "المبيعات (ج.م)" : "Sales (EGP)"} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -285,7 +286,7 @@ export function AdminDashboard() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-teal-accent font-bold font-sans mb-1">${order.totalAmount.toFixed(2)}</p>
+                    <p className="text-teal-accent font-bold font-sans mb-1">{formatPrice(order.totalAmount, language)}</p>
                     <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase ${
                       order.status === "Delivered" || order.status === "completed"
                         ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"

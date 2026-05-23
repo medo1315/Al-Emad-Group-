@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../context/AuthContext";
 import { Search, Filter, Eye, X, Loader2, Calendar, User, Mail, Phone, MapPin, DollarSign, Package } from "lucide-react";
+import { formatPrice } from "../../utils/currency";
 import { API_BASE_URL } from "../../config";
 import { toast } from "sonner";
 
@@ -223,7 +224,7 @@ export function AdminOrders() {
                         day: 'numeric'
                       })}
                     </td>
-                    <td className="px-6 py-4 font-bold text-teal-accent">${order.totalAmount.toFixed(2)}</td>
+                    <td className="px-6 py-4 font-bold text-teal-accent">{formatPrice(order.totalAmount, language)}</td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}>
                         {getStatusText(order.status)}
@@ -316,7 +317,7 @@ export function AdminOrders() {
                           </p>
                         </div>
                         <div className="text-right flex flex-col justify-center min-w-[70px]">
-                          <span className="text-teal-accent font-bold text-sm">${item.price.toFixed(2)}</span>
+                          <span className="text-teal-accent font-bold text-sm">{formatPrice(item.price, language)}</span>
                           <span className="text-xs text-white/50">{isRtl ? "للقطعة" : "each"}</span>
                         </div>
                       </div>
@@ -357,7 +358,7 @@ export function AdminOrders() {
                     </h4>
                     <div className="flex items-center justify-between text-white border-b border-teal-accent/10 pb-2 mb-2">
                       <span className="text-sm">{isRtl ? "قيمة الطلب" : "Subtotal"}</span>
-                      <span className="font-bold">${selectedOrder.totalAmount.toFixed(2)}</span>
+                      <span className="font-bold">{formatPrice(selectedOrder.totalAmount, language)}</span>
                     </div>
                     <div className="flex items-center justify-between text-white/65 text-xs">
                       <span>{isRtl ? "طريقة الدفع" : "Payment Method"}</span>

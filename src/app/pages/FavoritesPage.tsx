@@ -67,7 +67,7 @@ export function FavoritesPage() {
               <p className="text-sage-green-light max-w-sm mx-auto text-sm">
                 {isRtl 
                   ? "تصفح كتالوج المنتجات المميز لدينا وأضف المنتجات التي تعجبك إلى قائمة المفضلة." 
-                  : "Explore our premium Mediterranean olive oil collection and save your favorite items."}
+                  : "Explore our premium olive oil collection from Our Farms and save your favorite items."}
               </p>
             </div>
             <Link

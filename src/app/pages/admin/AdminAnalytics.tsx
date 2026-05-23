@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../context/AuthContext";
+import { formatPrice } from "../../utils/currency";
 import {
   TrendingUp,
   Users,
@@ -122,7 +123,7 @@ export function AdminAnalytics() {
   const metrics = [
     {
       label: isRtl ? "إجمالي المبيعات" : "Total Revenue",
-      value: `$${data.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      value: formatPrice(data.totalSales, language),
       icon: DollarSign,
       color: "from-teal-accent/30 to-teal-accent/10 border-teal-accent/30 text-teal-accent",
     },
@@ -134,7 +135,7 @@ export function AdminAnalytics() {
     },
     {
       label: isRtl ? "متوسط قيمة الطلب" : "Average Order Value",
-      value: `$${data.averageOrderValue.toFixed(2)}`,
+      value: formatPrice(data.averageOrderValue, language),
       icon: TrendingUp,
       color: "from-purple-500/20 to-purple-500/5 border-purple-500/30 text-purple-400",
     },
@@ -232,7 +233,7 @@ export function AdminAnalytics() {
                 dataKey="sales"
                 stroke="#2ddba8"
                 strokeWidth={3}
-                name={isRtl ? "المبيعات ($)" : "Sales ($)"}
+                name={isRtl ? "المبيعات (ج.م)" : "Sales (EGP)"}
               />
               <Line
                 type="monotone"
@@ -272,7 +273,7 @@ export function AdminAnalytics() {
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value) => `$${Number(value).toFixed(2)}`} />
+                      <Tooltip formatter={(value) => formatPrice(Number(value), language)} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
@@ -281,7 +282,7 @@ export function AdminAnalytics() {
                     <div key={idx} className="flex items-center gap-3">
                       <div className="w-4 h-4 rounded-full" style={{ backgroundColor: cat.color }} />
                       <span className="text-white text-sm font-semibold">{cat.name}</span>
-                      <span className="text-teal-accent text-xs">(${cat.value.toFixed(2)})</span>
+                      <span className="text-teal-accent text-xs">({formatPrice(cat.value, language)})</span>
                     </div>
                   ))}
                 </div>

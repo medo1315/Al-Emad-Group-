@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../context/AuthContext";
+import { formatPrice } from "../../utils/currency";
 import { Search, Plus, Edit, Trash2, Eye, X, Loader2, Save, Sparkles, Package, FileText, Image as ImageIcon } from "lucide-react";
 import { API_BASE_URL } from "../../config";
 import { toast } from "sonner";
@@ -144,7 +145,7 @@ export function AdminProducts() {
       "https://images.unsplash.com/photo-1759749597905-e2fed85d8cd5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800"
     ]);
     setBenefitsList([
-      { text: "Free shipping on orders over $50", textAr: "شحن مجاني للطلبات فوق $50" },
+      { text: "Free shipping on orders over EGP 500", textAr: "شحن مجاني للطلبات فوق 500 ج.م" },
       { text: "100% satisfaction guarantee", textAr: "ضمان رضا 100%" },
       { text: "30-day easy returns", textAr: "إرجاع سهل خلال 30 يومًا" }
     ]);
@@ -341,7 +342,7 @@ export function AdminProducts() {
     try {
       const list = JSON.parse(product.sizesJson || "[]");
       if (list.length > 0) {
-        return list.map((item: any) => `${item.size} ($${item.price})`).join(" ، ");
+        return list.map((item: any) => `${item.size} (${formatPrice(item.price, language)})`).join(" ، ");
       }
     } catch (e) {}
     return isRtl ? "غير محدد" : "Not configured";
@@ -373,7 +374,7 @@ export function AdminProducts() {
             <span>{isRtl ? "إدارة المنتجات" : "Product Catalog"}</span>
           </h1>
           <p className="text-sage-green-light">
-            {isRtl ? "إضافة، تعديل وحذف منتجات متجر العماد" : "Manage your premium Mediterranean products"}
+            {isRtl ? "إضافة، تعديل وحذف منتجات متجر العماد" : "Manage your premium products from Our Farms"}
           </p>
         </div>
         <button
@@ -444,7 +445,7 @@ export function AdminProducts() {
                     </div>
                     <p className="text-sm text-sage-green-light mb-3">{categoryName} • <span className="text-white/80">{getProductSizesText(product)}</span></p>
                     <div className="flex items-center justify-center md:justify-start gap-4">
-                      <span className="text-teal-accent text-xl font-bold">${getProductDisplayPrice(product)}</span>
+                      <span className="text-teal-accent text-xl font-bold">{formatPrice(getProductDisplayPrice(product), language)}</span>
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${product.inStock && product.stock > 0
                           ? "bg-sage-green/20 text-sage-green"
                           : "bg-red-500/20 text-red-400"
@@ -611,7 +612,7 @@ export function AdminProducts() {
                   </div>
                   <div className="w-full sm:w-36">
                     <label className="block text-xs text-white/70 mb-1">
-                      {isRtl ? "السعر ($)" : "Price ($)"}
+                      {isRtl ? "السعر (ج.م)" : "Price (EGP)"}
                     </label>
                     <input
                       type="number"
@@ -652,7 +653,7 @@ export function AdminProducts() {
                       <div key={idx} className="flex items-center justify-between p-3 bg-dark-olive/50 rounded-xl border border-teal-accent/20 text-sm">
                         <div className="text-white min-w-0 truncate">
                           <span className="font-semibold">{item.size}</span>:{" "}
-                          <span className="text-teal-accent font-bold">${item.price}</span>
+                          <span className="text-teal-accent font-bold">{formatPrice(item.price, language)}</span>
                         </div>
                         <button
                           type="button"
@@ -807,7 +808,7 @@ export function AdminProducts() {
                       type="text"
                       value={newBenefitText}
                       onChange={(e) => setNewBenefitText(e.target.value)}
-                      placeholder="e.g. Free shipping on orders over $50"
+                      placeholder="e.g. Free shipping on orders over EGP 500"
                       className="w-full px-3 py-2 bg-petroleum-blue/30 text-white placeholder:text-white/20 rounded-xl border border-teal-accent/20 focus:outline-none focus:ring-1 focus:ring-teal-accent text-sm"
                     />
                   </div>
@@ -817,7 +818,7 @@ export function AdminProducts() {
                       type="text"
                       value={newBenefitTextAr}
                       onChange={(e) => setNewBenefitTextAr(e.target.value)}
-                      placeholder="مثال: شحن مجاني للطلبات فوق 50 دولار"
+                      placeholder="مثال: شحن مجاني للطلبات فوق 500 ج.م"
                       className="w-full px-3 py-2 bg-petroleum-blue/30 text-white placeholder:text-white/20 rounded-xl border border-teal-accent/20 focus:outline-none focus:ring-1 focus:ring-teal-accent text-sm text-right"
                     />
                   </div>

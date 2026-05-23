@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../context/AuthContext";
 import { Search, AlertTriangle, Package, TrendingDown, TrendingUp, Edit2, Check, X, Loader2, RefreshCw } from "lucide-react";
+import { formatPrice } from "../../utils/currency";
 import { API_BASE_URL } from "../../config";
 import { toast } from "sonner";
 
@@ -245,7 +246,7 @@ export function AdminInventory() {
                       <td className="px-6 py-4 text-white/80">{prodCat}</td>
 
                       {/* Price */}
-                      <td className="px-6 py-4 text-white font-semibold font-sans">${item.price.toFixed(2)}</td>
+                      <td className="px-6 py-4 text-white font-semibold font-sans">{formatPrice(item.price, language)}</td>
 
                       {/* Stock Quantity (Inline editable) */}
                       <td className="px-6 py-4">
