@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../context/AuthContext";
 import { formatPrice } from "../../utils/currency";
-import { Search, Plus, Edit, Trash2, Eye, X, Loader2, Save, Sparkles, Package, FileText, Image as ImageIcon } from "lucide-react";
+import { Search, Plus, Edit, Trash2, Eye, X, Loader2, Save, Sparkles, Package, FileText, Image as ImageIcon, Upload } from "lucide-react";
 import { API_BASE_URL } from "../../config";
 import { toast } from "sonner";
 
@@ -114,6 +114,28 @@ export function AdminProducts() {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error(isRtl ? "حجم الصورة كبير جداً، الحد الأقصى هو 5 ميجابايت." : "Image size is too large. Maximum size is 5MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setImagesList(prev => [...prev, reader.result as string]);
+        toast.success(isRtl ? "تم رفع الصورة بنجاح!" : "Image uploaded successfully!");
+      }
+    };
+    reader.onerror = () => {
+      toast.error(isRtl ? "فشل قراءة ملف الصورة." : "Failed to read image file.");
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleOpenAddModal = () => {
     setModalType("add");
@@ -241,7 +263,9 @@ export function AdminProducts() {
       return;
     }
 
-    if (!formData.name || !formData.nameAr || !formData.description || !formData.descriptionAr || !formData.image) {
+    const firstImage = imagesList.length > 0 ? imagesList[0] : formData.image;
+
+    if (!formData.name || !formData.nameAr || !formData.description || !formData.descriptionAr || !firstImage) {
       toast.error(isRtl ? "يرجى تعبئة جميع الحقول المطلوبة." : "Please fill in all required fields.");
       return;
     }
@@ -261,7 +285,6 @@ export function AdminProducts() {
     const method = modalType === "add" ? "POST" : "PUT";
 
     const basePrice = sizesList.length > 0 ? sizesList[0].price : formData.price;
-    const firstImage = imagesList.length > 0 ? imagesList[0] : formData.image;
     const payload = {
       ...formData,
       price: basePrice,
@@ -684,30 +707,58 @@ export function AdminProducts() {
                     : "The first image is the primary display image. You can change this by setting another image as primary."}
                 </p>
 
-                {/* Add new image URL */}
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <input
-                    type="text"
-                    value={newImageUrl}
-                    onChange={(e) => setNewImageUrl(e.target.value)}
-                    placeholder={isRtl ? "أدخل رابط الصورة..." : "Enter image URL..."}
-                    className="flex-1 px-4 py-3 bg-petroleum-blue/30 text-white placeholder:text-white/20 rounded-xl border border-teal-accent/20 focus:outline-none focus:ring-2 focus:ring-teal-accent text-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!newImageUrl || !newImageUrl.trim().startsWith("http")) {
-                        toast.error(isRtl ? "يرجى إدخال رابط صورة صالح يبدأ بـ http" : "Please enter a valid image URL starting with http");
-                        return;
-                      }
-                      setImagesList([...imagesList, newImageUrl.trim()]);
-                      setNewImageUrl("");
-                    }}
-                    className="px-6 py-3 bg-teal-accent hover:bg-teal-dark text-white rounded-xl transition-all text-sm font-semibold flex items-center justify-center gap-1.5"
-                  >
-                    <Plus className="w-4 h-4" />
-                    <span>{isRtl ? "إضافة" : "Add"}</span>
-                  </button>
+                {/* Image Upload or URL */}
+                <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      value={newImageUrl}
+                      onChange={(e) => setNewImageUrl(e.target.value)}
+                      placeholder={isRtl ? "أدخل رابط الصورة..." : "Enter image URL..."}
+                      className="flex-1 px-4 py-3 bg-petroleum-blue/30 text-white placeholder:text-white/20 rounded-xl border border-teal-accent/20 focus:outline-none focus:ring-2 focus:ring-teal-accent text-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!newImageUrl || !newImageUrl.trim().startsWith("http")) {
+                          toast.error(isRtl ? "يرجى إدخال رابط صورة صالح يبدأ بـ http" : "Please enter a valid image URL starting with http");
+                          return;
+                        }
+                        setImagesList([...imagesList, newImageUrl.trim()]);
+                        setNewImageUrl("");
+                      }}
+                      className="px-6 py-3 bg-teal-accent/20 hover:bg-teal-accent text-white border border-teal-accent/30 rounded-xl transition-all text-sm font-semibold flex items-center justify-center gap-1.5"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>{isRtl ? "إضافة رابط" : "Add Link"}</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="h-[1px] bg-teal-accent/20 flex-1"></div>
+                    <span className="text-xs text-sage-green-light font-bold uppercase">{isRtl ? "أو" : "OR"}</span>
+                    <div className="h-[1px] bg-teal-accent/20 flex-1"></div>
+                  </div>
+
+                  <div className="flex items-center justify-center w-full">
+                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-teal-accent/30 hover:border-teal-accent/60 bg-petroleum-blue/10 hover:bg-petroleum-blue/20 rounded-2xl cursor-pointer transition-all">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <Upload className="w-8 h-8 text-teal-accent mb-2 animate-bounce" />
+                        <p className="text-sm text-white font-medium">
+                          {isRtl ? "اضغط لرفع صورة من جهازك" : "Click to upload an image from your device"}
+                        </p>
+                        <p className="text-xs text-sage-green-light mt-1">
+                          PNG, JPG, JPEG, WEBP (Max 5MB)
+                        </p>
+                      </div>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        onChange={handleImageFileUpload}
+                      />
+                    </label>
+                  </div>
                 </div>
 
                 {/* Gallery Grid */}
