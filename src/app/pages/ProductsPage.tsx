@@ -31,7 +31,7 @@ export function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
   const [sortBy, setSortBy] = useState("featured");
   const [showFilters, setShowFilters] = useState(false);
 
@@ -252,7 +252,8 @@ export function ProductsPage() {
                   <input
                     type="range"
                     min="0"
-                    max="100"
+                    max="5000"
+                    step="50"
                     value={priceRange[1]}
                     onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
                     className="w-full accent-teal-accent"
@@ -296,7 +297,7 @@ export function ProductsPage() {
                   onClick={() => {
                     setSearchQuery("");
                     setSelectedCategory("all");
-                    setPriceRange([0, 100]);
+                    setPriceRange([0, 5000]);
                   }}
                   className="mt-4 px-6 py-3 bg-olive-green text-white rounded-full hover:bg-dark-olive transition-colors"
                 >
