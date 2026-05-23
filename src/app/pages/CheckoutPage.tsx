@@ -122,7 +122,6 @@ export function CheckoutPage() {
 
   // Governorate list state
   const [governorates, setGovernorates] = useState<any[]>([]);
-  const [isLoadingGovs, setIsLoadingGovs] = useState(true);
   const [selectedGovernorate, setSelectedGovernorate] = useState<any>(null);
 
   useEffect(() => {
@@ -273,7 +272,6 @@ export function CheckoutPage() {
   const shipping = selectedGovernorate ? selectedGovernorate.shippingCost : 0;
   const couponDiscount = appliedCoupon ? total * (appliedCoupon.discountPercentage / 100) : 0;
   const discountedSubtotal = total - couponDiscount;
-  const tax = discountedSubtotal * 0.1;
   const finalTotal = discountedSubtotal + shipping;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

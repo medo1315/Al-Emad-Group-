@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { useLanguage } from "../context/LanguageContext";
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone } from "lucide-react";
 import logoImage from "../../imports/logo.png";
 
 export function Footer() {

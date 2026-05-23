@@ -1,4 +1,4 @@
-import { Award, Leaf, Heart, Users, Globe, TreePine } from "lucide-react";
+import { Award, Leaf, Heart, Globe, TreePine } from "lucide-react";
 import { OliveBranchDecor } from "../components/OliveBranchDecor";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -25,29 +25,6 @@ export function AboutPage() {
       icon: Globe,
       title: t("aboutVal4Title"),
       description: t("aboutVal4Desc"),
-    },
-  ];
-
-  const timeline = [
-    {
-      year: t("aboutT1Year"),
-      title: t("aboutT1Title"),
-      description: t("aboutT1Desc"),
-    },
-    {
-      year: t("aboutT2Year"),
-      title: t("aboutT2Title"),
-      description: t("aboutT2Desc"),
-    },
-    {
-      year: t("aboutT3Year"),
-      title: t("aboutT3Title"),
-      description: t("aboutT3Desc"),
-    },
-    {
-      year: t("aboutT4Year"),
-      title: t("aboutT4Title"),
-      description: t("aboutT4Desc"),
     },
   ];
 

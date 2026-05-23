@@ -1,5 +1,5 @@
 import { useLanguage } from "../context/LanguageContext";
-import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
+import { Mail, Phone, Clock, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { OliveBranchDecor } from "../components/OliveBranchDecor";

@@ -27,7 +27,6 @@ export function CartPage() {
   };
 
   const shipping = 5.99;
-  const tax = total * 0.1;
   const finalTotal = total + shipping;
 
   if (items.length === 0) {
