@@ -136,50 +136,10 @@ export function AboutPage() {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-20 bg-petroleum-blue/30 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-4xl lg:text-5xl text-white mb-4">
-              {t("aboutTimelineTitle")}
-            </h2>
-          </div>
 
-          <div className="space-y-8">
-            {timeline.map((event, index) => (
-              <div
-                key={index}
-                className="relative pl-8 md:pl-32 pb-8 border-l-2 border-sage-green last:border-transparent"
-              >
-                <div className="absolute left-0 -translate-x-1/2 w-4 h-4 bg-olive-green rounded-full border-4 border-soft-beige"></div>
-                <div className="absolute left-8 md:left-0 md:-translate-x-full md:pr-8 top-0 text-2xl font-display text-olive-green md:w-32 md:text-right">
-                  {event.year}
-                </div>
-                <div className="bg-dark-olive/50 rounded-2xl p-6">
-                  <h3 className="font-display text-xl text-white mb-2">
-                    {event.title}
-                  </h3>
-                  <p className="text-sage-green-light">
-                    {event.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Team Section */}
-      <section className="py-20 bg-gradient-to-br from-olive-green to-dark-olive text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Users className="w-16 h-16 mx-auto mb-6 text-sage-green" />
-          <h2 className="font-display text-4xl lg:text-5xl mb-6">
-            {t("aboutTeamTitle")}
-          </h2>
-          <p className="text-xl text-sage-green max-w-3xl mx-auto leading-relaxed">
-            {t("aboutTeamDesc")}
-          </p>
-        </div>
-      </section>
+
     </div>
   );
 }

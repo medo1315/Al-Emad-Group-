@@ -23,6 +23,7 @@ import { AdminInventory } from "./pages/admin/AdminInventory";
 import { AdminCoupons } from "./pages/admin/AdminCoupons";
 import { AdminRoles } from "./pages/admin/AdminRoles";
 import { AdminAccounts } from "./pages/admin/AdminAccounts";
+import { AdminShipping } from "./pages/admin/AdminShipping";
 import { NotFound } from "./pages/NotFound";
 
 export const router = createBrowserRouter([
@@ -62,6 +63,7 @@ export const router = createBrowserRouter([
       { path: "coupons", Component: AdminCoupons },
       { path: "roles", Component: AdminRoles },
       { path: "accounts", Component: AdminAccounts },
+      { path: "shipping", Component: AdminShipping },
     ],
   },
   {

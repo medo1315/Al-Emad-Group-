@@ -12,6 +12,7 @@ import {
   X,
   Shield,
   UserPlus,
+  Truck,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import logoImage from "../../imports/logo.png";
@@ -35,6 +36,7 @@ export function AdminLayout() {
     { path: "/admin/analytics", icon: BarChart3, label: t("analytics") },
     { path: "/admin/inventory", icon: Warehouse, label: t("inventory") },
     { path: "/admin/coupons", icon: Ticket, label: t("coupons") },
+    { path: "/admin/shipping", icon: Truck, label: language === "ar" ? "أسعار الشحن" : "Shipping Costs" },
     { path: "/admin/roles", icon: Shield, label: language === "ar" ? "الأدوار والصلاحيات" : "Roles & Permissions" },
     { path: "/admin/accounts", icon: UserPlus, label: language === "ar" ? "حسابات المشرفين" : "Admin Accounts" },
   ];

@@ -72,7 +72,7 @@ export function HomePage() {
       if (sizes.length > 0) {
         return sizes[0].price;
       }
-    } catch (e) {}
+    } catch (e) { }
     return product.price;
   };
 
@@ -82,7 +82,7 @@ export function HomePage() {
       if (sizes.length > 0) {
         return sizes[0].size;
       }
-    } catch (e) {}
+    } catch (e) { }
     return "500ml";
   };
 
@@ -320,7 +320,7 @@ export function HomePage() {
       <section className="py-20 bg-gradient-to-br from-olive-green-dark via-dark-olive to-petroleum-dark text-white relative overflow-hidden border-t-2 border-teal-accent/30">
         <div className="absolute inset-0 opacity-20">
           <img
-            src="https://images.unsplash.com/photo-1617708139288-c04371187382?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920"
+            src="https://images.unsplash.com/photo-1617708139288-c04371187382?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2002"
             alt="Olive Grove"
             className="w-full h-full object-cover"
           />

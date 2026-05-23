@@ -62,10 +62,7 @@ export function Footer() {
           <div>
             <h4 className="font-display text-lg mb-4">{t("footerContactUs")}</h4>
             <ul className="space-y-3">
-              <li className="flex items-start gap-3 text-sm text-white/70">
-                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-teal-accent animate-pulse" />
-                <span className="font-sans">{t("contactInfo1Desc")}</span>
-              </li>
+
               <li className="flex items-center gap-3 text-sm text-white/70">
                 <Phone className="w-4 h-4 flex-shrink-0 text-teal-accent" />
                 <span className="font-sans">{t("contactInfo2Desc")}</span>
@@ -86,26 +83,21 @@ export function Footer() {
           {/* Social Links */}
           <div className="flex items-center gap-4">
             <a
-              href="#"
+              href="https://www.facebook.com/share/1FaRk7XJG4/?mibextid=wwXIfr"
               className="w-9 h-9 rounded-full bg-white/10 hover:bg-teal-accent flex items-center justify-center transition-colors"
               aria-label="Facebook"
             >
               <Facebook className="w-4 h-4" />
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/alemad_group?igsh=MTM3cXg5NmlzcXltMQ%3D%3D&utm_source=qr"
               className="w-9 h-9 rounded-full bg-white/10 hover:bg-teal-accent flex items-center justify-center transition-colors"
               aria-label="Instagram"
             >
               <Instagram className="w-4 h-4" />
             </a>
-            <a
-              href="#"
-              className="w-9 h-9 rounded-full bg-white/10 hover:bg-teal-accent flex items-center justify-center transition-colors"
-              aria-label="Twitter"
-            >
-              <Twitter className="w-4 h-4" />
-            </a>
+
+
           </div>
         </div>
       </div>

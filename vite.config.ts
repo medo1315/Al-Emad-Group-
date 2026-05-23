@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { defineConfig } from 'vite'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
@@ -35,6 +36,7 @@ export default defineConfig({
       '/api': {
         target: 'http://elemadgroup.runasp.net',
         changeOrigin: true,
+        secure: false,
       },
     },
   },

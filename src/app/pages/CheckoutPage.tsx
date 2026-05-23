@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router";
 import { useLanguage } from "../context/LanguageContext";
 import { useCart } from "../context/CartContext";
@@ -13,9 +13,104 @@ import {
   Check,
   Package,
   Loader2,
+  Search,
+  ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "../components/ui/button";
+
+interface SearchableSelectProps {
+  options: Array<{ id: number; name: string; nameAr: string; shippingCost: number }>;
+  value: string;
+  onChange: (option: any) => void;
+  placeholder: string;
+  language: string;
+}
+
+function SearchableSelect({ options, value, onChange, placeholder, language }: SearchableSelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const filteredOptions = options.filter(opt =>
+    opt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    opt.nameAr.includes(searchTerm)
+  );
+
+  const selectedOption = options.find(opt => opt.name === value || opt.nameAr === value);
+
+  return (
+    <div className="relative w-full" ref={dropdownRef}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-4 py-3 rounded-xl border border-teal-accent/30 focus:outline-none focus:ring-2 focus:ring-olive-green bg-dark-olive/50 font-sans flex justify-between items-center text-left text-white"
+      >
+        <span>
+          {selectedOption
+            ? (language === "ar" ? selectedOption.nameAr : selectedOption.name)
+            : placeholder}
+        </span>
+        <ChevronDown className={`w-5 h-5 text-teal-accent transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-2 rounded-xl bg-petroleum-dark border border-teal-accent/30 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="p-2 border-b border-teal-accent/20 flex items-center gap-2 bg-dark-olive/35">
+            <Search className="w-4 h-4 text-teal-accent flex-shrink-0" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder={language === "ar" ? "ابحث عن المحافظة..." : "Search governorate..."}
+              className="w-full bg-transparent border-none outline-none text-white text-sm py-1 placeholder:text-sage-green-light/60 font-sans focus:ring-0"
+              autoFocus
+            />
+          </div>
+          <ul className="max-h-60 overflow-y-auto py-1 divide-y divide-teal-accent/10">
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((opt) => (
+                <li key={opt.id}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onChange(opt);
+                      setIsOpen(false);
+                      setSearchTerm("");
+                    }}
+                    className={`w-full px-4 py-3 text-left hover:bg-olive-green/35 text-white transition-colors flex justify-between items-center ${selectedOption?.id === opt.id ? "bg-olive-green/20" : ""
+                      }`}
+                  >
+                    <span className="font-sans">
+                      {language === "ar" ? opt.nameAr : opt.name}
+                    </span>
+                    <span className="text-xs text-teal-accent font-semibold">
+                      +{opt.shippingCost.toFixed(2)} EGP
+                    </span>
+                  </button>
+                </li>
+              ))
+            ) : (
+              <li className="px-4 py-3 text-center text-sm text-sage-green-light">
+                {language === "ar" ? "لا توجد نتائج" : "No results found"}
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function CheckoutPage() {
   const { t, language } = useLanguage();
@@ -24,6 +119,59 @@ export function CheckoutPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Governorate list state
+  const [governorates, setGovernorates] = useState<any[]>([]);
+  const [isLoadingGovs, setIsLoadingGovs] = useState(true);
+  const [selectedGovernorate, setSelectedGovernorate] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchGovernorates = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/governorates`);
+        if (response.ok) {
+          const data = await response.json();
+          setGovernorates(data);
+        } else {
+          throw new Error("Failed to fetch");
+        }
+      } catch (e) {
+        console.error("Error fetching governorates, loading defaults:", e);
+        setGovernorates([
+          { id: 1, name: "Cairo", nameAr: "القاهرة", shippingCost: 50.00, estimatedDelivery: "1-2 business days", estimatedDeliveryAr: "1-2 أيام عمل" },
+          { id: 2, name: "Giza", nameAr: "الجيزة", shippingCost: 50.00, estimatedDelivery: "1-2 business days", estimatedDeliveryAr: "1-2 أيام عمل" },
+          { id: 3, name: "Alexandria", nameAr: "الإسكندرية", shippingCost: 60.00, estimatedDelivery: "2-3 business days", estimatedDeliveryAr: "2-3 أيام عمل" },
+          { id: 4, name: "Qalyubia", nameAr: "القليوبية", shippingCost: 65.00, estimatedDelivery: "2-3 business days", estimatedDeliveryAr: "2-3 أيام عمل" },
+          { id: 5, name: "Sharqia", nameAr: "الشرقية", shippingCost: 65.00, estimatedDelivery: "2-3 business days", estimatedDeliveryAr: "2-3 أيام عمل" },
+          { id: 6, name: "Monufia", nameAr: "المنوفية", shippingCost: 65.00, estimatedDelivery: "2-3 business days", estimatedDeliveryAr: "2-3 أيام عمل" },
+          { id: 7, name: "Gharbia", nameAr: "الغربية", shippingCost: 65.00, estimatedDelivery: "2-3 business days", estimatedDeliveryAr: "2-3 أيام عمل" },
+          { id: 8, name: "Dakahlia", nameAr: "الدقهلية", shippingCost: 65.00, estimatedDelivery: "2-3 business days", estimatedDeliveryAr: "2-3 أيام عمل" },
+          { id: 9, name: "Beheira", nameAr: "البحيرة", shippingCost: 65.00, estimatedDelivery: "2-3 business days", estimatedDeliveryAr: "2-3 أيام عمل" },
+          { id: 10, name: "Damietta", nameAr: "دمياط", shippingCost: 70.00, estimatedDelivery: "2-4 business days", estimatedDeliveryAr: "2-4 أيام عمل" },
+          { id: 11, name: "Port Said", nameAr: "بورسعيد", shippingCost: 70.00, estimatedDelivery: "2-4 business days", estimatedDeliveryAr: "2-4 أيام عمل" },
+          { id: 12, name: "Ismailia", nameAr: "الإسماعيلية", shippingCost: 70.00, estimatedDelivery: "2-4 business days", estimatedDeliveryAr: "2-4 أيام عمل" },
+          { id: 13, name: "Suez", nameAr: "السويس", shippingCost: 70.00, estimatedDelivery: "2-4 business days", estimatedDeliveryAr: "2-4 أيام عمل" },
+          { id: 14, name: "Kafr El Sheikh", nameAr: "كفر الشيخ", shippingCost: 70.00, estimatedDelivery: "2-4 business days", estimatedDeliveryAr: "2-4 أيام عمل" },
+          { id: 15, name: "Fayoum", nameAr: "الفيوم", shippingCost: 75.00, estimatedDelivery: "2-4 business days", estimatedDeliveryAr: "2-4 أيام عمل" },
+          { id: 16, name: "Beni Suef", nameAr: "بني سويف", shippingCost: 75.00, estimatedDelivery: "2-4 business days", estimatedDeliveryAr: "2-4 أيام عمل" },
+          { id: 17, name: "Minya", nameAr: "المنيا", shippingCost: 80.00, estimatedDelivery: "3-5 business days", estimatedDeliveryAr: "3-5 أيام عمل" },
+          { id: 18, name: "Assiut", nameAr: "أسيوط", shippingCost: 80.00, estimatedDelivery: "3-5 business days", estimatedDeliveryAr: "3-5 أيام عمل" },
+          { id: 19, name: "Sohag", nameAr: "سوهاج", shippingCost: 85.00, estimatedDelivery: "3-5 business days", estimatedDeliveryAr: "3-5 أيام عمل" },
+          { id: 20, name: "Qena", nameAr: "قنا", shippingCost: 85.00, estimatedDelivery: "3-5 business days", estimatedDeliveryAr: "3-5 أيام عمل" },
+          { id: 21, name: "Luxor", nameAr: "الأقصر", shippingCost: 90.00, estimatedDelivery: "3-5 business days", estimatedDeliveryAr: "3-5 أيام عمل" },
+          { id: 22, name: "Aswan", nameAr: "أسوان", shippingCost: 95.00, estimatedDelivery: "3-5 business days", estimatedDeliveryAr: "3-5 أيام عمل" },
+          { id: 23, name: "Red Sea", nameAr: "البحر الأحمر", shippingCost: 100.00, estimatedDelivery: "4-7 business days", estimatedDeliveryAr: "4-7 أيام عمل" },
+          { id: 24, name: "Matrouh", nameAr: "مطروح", shippingCost: 100.00, estimatedDelivery: "4-7 business days", estimatedDeliveryAr: "4-7 أيام عمل" },
+          { id: 25, name: "New Valley", nameAr: "الوادي الجديد", shippingCost: 120.00, estimatedDelivery: "4-7 business days", estimatedDeliveryAr: "4-7 أيام عمل" },
+          { id: 26, name: "North Sinai", nameAr: "شمال سيناء", shippingCost: 120.00, estimatedDelivery: "4-7 business days", estimatedDeliveryAr: "4-7 أيام عمل" },
+          { id: 27, name: "South Sinai", nameAr: "جنوب سيناء", shippingCost: 120.00, estimatedDelivery: "4-7 business days", estimatedDeliveryAr: "4-7 أيام عمل" }
+        ]);
+      } finally {
+        setIsLoadingGovs(false);
+      }
+    };
+    fetchGovernorates();
+  }, []);
 
   // Coupon state
   const [couponCodeInput, setCouponCodeInput] = useState("");
@@ -105,11 +253,28 @@ export function CheckoutPage() {
     };
   });
 
-  const shipping = formData.shippingMethod === "express" ? 12.99 : 5.99;
+  useEffect(() => {
+    if (governorates.length > 0 && formData.city) {
+      const match = governorates.find(g => g.name.toLowerCase() === formData.city.toLowerCase() || g.nameAr === formData.city);
+      if (match) {
+        setSelectedGovernorate(match);
+      }
+    }
+  }, [governorates, formData.city]);
+
+  const handleSelectGovernorate = (gov: any) => {
+    setSelectedGovernorate(gov);
+    setFormData(prev => ({
+      ...prev,
+      city: gov.name
+    }));
+  };
+
+  const shipping = selectedGovernorate ? selectedGovernorate.shippingCost : 0;
   const couponDiscount = appliedCoupon ? total * (appliedCoupon.discountPercentage / 100) : 0;
   const discountedSubtotal = total - couponDiscount;
   const tax = discountedSubtotal * 0.1;
-  const finalTotal = discountedSubtotal + shipping + tax;
+  const finalTotal = discountedSubtotal + shipping;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -122,8 +287,12 @@ export function CheckoutPage() {
   const handleNextStep = () => {
     if (step === 1) {
       // Validate shipping info
-      if (!formData.firstName || !formData.lastName || !formData.email || !formData.address) {
-        toast.error(t("checkoutRequiredFields"));
+      if (!formData.firstName || !formData.lastName || !formData.email || !formData.address || !formData.city) {
+        toast.error(
+          language === "ar"
+            ? "يرجى ملء جميع الحقول المطلوبة بما في ذلك المحافظة."
+            : "Please fill in all required fields including the Governorate."
+        );
         return;
       }
       setStep(2);
@@ -227,11 +396,10 @@ export function CheckoutPage() {
               <div key={s.num} className="flex items-center">
                 <div className="flex flex-col items-center">
                   <div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                      step >= s.num
-                        ? "bg-olive-green text-white"
-                        : "bg-petroleum-blue/30 backdrop-blur-sm border-2 border-teal-accent/30 text-sage-green-light"
-                    }`}
+                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${step >= s.num
+                      ? "bg-olive-green text-white"
+                      : "bg-petroleum-blue/30 backdrop-blur-sm border-2 border-teal-accent/30 text-sage-green-light"
+                      }`}
                   >
                     {step > s.num ? (
                       <Check className="w-6 h-6" />
@@ -243,9 +411,8 @@ export function CheckoutPage() {
                 </div>
                 {index < 2 && (
                   <div
-                    className={`w-24 h-1 mx-4 transition-all ${
-                      step > s.num ? "bg-olive-green" : "bg-border"
-                    }`}
+                    className={`w-24 h-1 mx-4 transition-all ${step > s.num ? "bg-olive-green" : "bg-border"
+                      }`}
                   ></div>
                 )}
               </div>
@@ -335,90 +502,55 @@ export function CheckoutPage() {
                   </div>
 
                   <div>
-                    <label className="block text-white mb-2">{t("checkoutCity")}</label>
-                    <input
-                      type="text"
-                      name="city"
+                    <label className="block text-white mb-2">
+                      {language === "ar" ? "المحافظة" : "Governorate"} <span className="text-destructive">{t("checkoutRequired")}</span>
+                    </label>
+                    <SearchableSelect
+                      options={governorates}
                       value={formData.city}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-xl border border-teal-accent/30 focus:outline-none focus:ring-2 focus:ring-olive-green bg-dark-olive/50 font-sans"
+                      onChange={handleSelectGovernorate}
+                      placeholder={language === "ar" ? "اختر المحافظة..." : "Select Governorate..."}
+                      language={language}
                     />
-                  </div>
-
-                  <div>
-                    <label className="block text-white mb-2">{t("checkoutState")}</label>
-                    <input
-                      type="text"
-                      name="state"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-xl border border-teal-accent/30 focus:outline-none focus:ring-2 focus:ring-olive-green bg-dark-olive/50 font-sans"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-white mb-2">{t("checkoutZip")}</label>
-                    <input
-                      type="text"
-                      name="zipCode"
-                      value={formData.zipCode}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-xl border border-teal-accent/30 focus:outline-none focus:ring-2 focus:ring-olive-green bg-dark-olive/50 font-sans"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-white mb-2">{t("checkoutCountry")}</label>
-                    <select
-                      name="country"
-                      value={formData.country}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-xl border border-teal-accent/30 focus:outline-none focus:ring-2 focus:ring-olive-green bg-dark-olive/50 font-sans"
-                    >
-                      <option value="USA">United States</option>
-                      <option value="UK">United Kingdom</option>
-                      <option value="CA">Canada</option>
-                    </select>
                   </div>
                 </div>
 
-                {/* Shipping Method */}
+                {/* Shipping details */}
                 <div className="mt-8">
                   <h3 className="font-display text-lg text-white mb-4">
-                    {t("checkoutShipMethod")}
+                    {language === "ar" ? "تفاصيل الشحن والتوصيل" : "Shipping & Delivery"}
                   </h3>
-                  <div className="space-y-3">
-                    <label className="flex items-center gap-4 p-4 rounded-xl border-2 border-teal-accent/30 hover:border-olive-green cursor-pointer transition-all">
-                      <input
-                        type="radio"
-                        name="shippingMethod"
-                        value="standard"
-                        checked={formData.shippingMethod === "standard"}
-                        onChange={handleInputChange}
-                        className="w-5 h-5 text-teal-accent"
-                      />
-                      <div className="flex-1">
-                        <p className="font-medium text-white">{t("checkoutStandardShip")}</p>
-                        <p className="text-sm text-sage-green-light">{t("checkoutStandardDays")}</p>
-                      </div>
-                      <span className="text-teal-accent font-semibold">{formatPrice(5.99, language)}</span>
-                    </label>
-
-                    <label className="flex items-center gap-4 p-4 rounded-xl border-2 border-teal-accent/30 hover:border-olive-green cursor-pointer transition-all">
-                      <input
-                        type="radio"
-                        name="shippingMethod"
-                        value="express"
-                        checked={formData.shippingMethod === "express"}
-                        onChange={handleInputChange}
-                        className="w-5 h-5 text-teal-accent"
-                      />
-                      <div className="flex-1">
-                        <p className="font-medium text-white">{t("checkoutExpressShip")}</p>
-                        <p className="text-sm text-sage-green-light">{t("checkoutExpressDays")}</p>
-                      </div>
-                      <span className="text-teal-accent font-semibold">{formatPrice(12.99, language)}</span>
-                    </label>
+                  <div className="p-5 rounded-xl border-2 border-teal-accent/30 bg-dark-olive/35 text-white space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sage-green-light">
+                        {language === "ar" ? "المحافظة المحددة:" : "Selected Governorate:"}
+                      </span>
+                      <span className="font-bold text-teal-accent">
+                        {selectedGovernorate
+                          ? (language === "ar" ? selectedGovernorate.nameAr : selectedGovernorate.name)
+                          : (language === "ar" ? "يرجى اختيار محافظة" : "Please select a governorate")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sage-green-light">
+                        {language === "ar" ? "تكلفة التوصيل:" : "Delivery Cost:"}
+                      </span>
+                      <span className="font-bold text-xl text-white">
+                        {selectedGovernorate
+                          ? formatPrice(selectedGovernorate.shippingCost, language)
+                          : (language === "ar" ? "تحدد عند اختيار المحافظة" : "Select governorate to see cost")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm pt-3 border-t border-teal-accent/15">
+                      <span className="text-sage-green-light">
+                        {language === "ar" ? "وقت التوصيل المتوقع:" : "Estimated Delivery:"}
+                      </span>
+                      <span className="text-white font-medium">
+                        {selectedGovernorate
+                          ? (language === "ar" ? selectedGovernorate.estimatedDeliveryAr : selectedGovernorate.estimatedDelivery)
+                          : (language === "ar" ? "خلال 2 إلى 4 أيام عمل" : "2-4 business days")}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -450,7 +582,7 @@ export function CheckoutPage() {
                         {language === "ar" ? "الدفع عند الاستلام" : "Cash on Delivery"}
                       </h3>
                       <p className="text-sm text-sage-green-light mt-2 leading-relaxed">
-                        {language === "ar" 
+                        {language === "ar"
                           ? "ادفع نقدًا عند استلام طلبك. يرجى التأكد من جاهزية المبلغ المطلوب عند وصول مندوب التوصيل."
                           : "Pay with cash upon delivery. Please ensure you have the correct amount ready when the courier arrives."}
                       </p>
@@ -569,11 +701,8 @@ export function CheckoutPage() {
                   <span>{t("cartShipping")}</span>
                   <span>{formatPrice(shipping, language)}</span>
                 </div>
-                <div className="flex justify-between text-white/90">
-                  <span>{t("cartTax")}</span>
-                  <span>{formatPrice(tax, language)}</span>
-                </div>
-                
+
+
                 {/* Coupon Code Input block */}
                 <div className="pt-2 pb-2 border-t border-b border-teal-accent/10">
                   {!appliedCoupon ? (
@@ -583,9 +712,8 @@ export function CheckoutPage() {
                         placeholder={language === "ar" ? "كود الخصم..." : "Coupon code..."}
                         value={couponCodeInput}
                         onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase())}
-                        className={`flex-1 px-3 py-2 bg-petroleum-dark/50 text-white rounded-lg border border-teal-accent/25 focus:outline-none focus:border-teal-accent text-xs font-mono font-bold ${
-                          language === "ar" ? "text-right" : "text-left"
-                        }`}
+                        className={`flex-1 px-3 py-2 bg-petroleum-dark/50 text-white rounded-lg border border-teal-accent/25 focus:outline-none focus:border-teal-accent text-xs font-mono font-bold ${language === "ar" ? "text-right" : "text-left"
+                          }`}
                       />
                       <button
                         onClick={handleApplyCoupon}
@@ -629,14 +757,7 @@ export function CheckoutPage() {
                   <Check className="w-4 h-4 text-sage-green" />
                   {t("checkoutSecureCheck")}
                 </p>
-                <p className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-sage-green" />
-                  {t("cartFreeReturns")}
-                </p>
-                <p className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-sage-green" />
-                  {t("checkoutMoneyBack")}
-                </p>
+
               </div>
             </div>
           </div>

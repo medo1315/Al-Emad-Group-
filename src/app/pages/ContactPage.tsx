@@ -20,12 +20,7 @@ export function ContactPage() {
   };
 
   const contactInfo = [
-    {
-      icon: MapPin,
-      title: t("contactInfo1Title"),
-      content: t("contactInfo1Desc"),
-      subContent: t("contactInfo1Sub"),
-    },
+
     {
       icon: Phone,
       title: t("contactInfo2Title"),
@@ -36,7 +31,6 @@ export function ContactPage() {
       icon: Mail,
       title: t("contactInfo3Title"),
       content: t("contactInfo3Desc"),
-      subContent: t("contactInfo3Sub"),
     },
     {
       icon: Clock,
@@ -154,15 +148,7 @@ export function ContactPage() {
         </div>
 
         {/* Map Section */}
-        <div className="bg-petroleum-blue/30 backdrop-blur-sm rounded-3xl overflow-hidden border border-teal-accent/30 shadow-xl">
-          <div className="aspect-[21/9] bg-gradient-to-br from-sage-green/20 to-olive-green/20 flex items-center justify-center">
-            <div className="text-center">
-              <MapPin className="w-16 h-16 text-teal-accent mx-auto mb-4" />
-              <p className="text-lg text-white">{t("contactMapView")}</p>
-              <p className="text-sm text-sage-green-light">{t("contactMapLoc")}</p>
-            </div>
-          </div>
-        </div>
+
       </div>
     </div>
   );

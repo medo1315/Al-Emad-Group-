@@ -28,7 +28,7 @@ export function CartPage() {
 
   const shipping = 5.99;
   const tax = total * 0.1;
-  const finalTotal = total + shipping + tax;
+  const finalTotal = total + shipping;
 
   if (items.length === 0) {
     return (
@@ -136,10 +136,7 @@ export function CartPage() {
                   <span>{t("cartShipping")}</span>
                   <span>{formatPrice(shipping, language)}</span>
                 </div>
-                <div className="flex justify-between text-white/90">
-                  <span>{t("cartTax")}</span>
-                  <span>{formatPrice(tax, language)}</span>
-                </div>
+
                 <div className="h-px bg-teal-accent/20"></div>
                 <div className="flex justify-between text-xl text-white">
                   <span className="font-display">{t("total")}</span>
@@ -154,10 +151,7 @@ export function CartPage() {
               </button>
 
               <div className="space-y-2 text-sm text-muted-foreground">
-                <p className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-sage-green rounded-full"></span>
-                  {t("cartFreeReturns")}
-                </p>
+               
                 <p className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-sage-green rounded-full"></span>
                   {t("cartSecurePay")}
