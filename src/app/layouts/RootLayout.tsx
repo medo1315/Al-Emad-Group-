@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
@@ -5,6 +6,10 @@ import { PageLoader } from "../components/PageLoader";
 
 export function RootLayout() {
   const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-dark-olive to-petroleum-dark text-white">

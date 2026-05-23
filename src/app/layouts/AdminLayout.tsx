@@ -13,7 +13,7 @@ import {
   Shield,
   UserPlus,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logoImage from "../../imports/logo.png";
 import { PageLoader } from "../components/PageLoader";
 
@@ -22,6 +22,10 @@ export function AdminLayout() {
   const { t, language } = useLanguage();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   const menuItems = [
     { path: "/admin", icon: LayoutDashboard, label: t("dashboard"), exact: true },
