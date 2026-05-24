@@ -300,6 +300,7 @@ export function CheckoutPage() {
   };
 
   const handlePlaceOrder = async () => {
+    if (isProcessing) return;
     setIsProcessing(true);
 
     const payload = {
