@@ -42,7 +42,7 @@ const translations = {
     heroSubtitle: "Experience the authentic taste of nature's finest olives",
     shopNow: "Shop Now",
     exploreProducts: "Explore Products",
-    naturalOrganic: "100% Natural & Organic",
+    naturalOrganic: "100% Natural ",
     whyChooseUs: "Why Choose AL EMAD GROUP",
     premium: "Premium Quality",
     organicFeature: "100% Organic",
