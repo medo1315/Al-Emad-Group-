@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../context/AuthContext";
-import { Search, Filter, Eye, X, Loader2, Calendar, User, Mail, Phone, MapPin, DollarSign, Package } from "lucide-react";
+import { Search, Filter, Eye, X, Loader2, Calendar, User, Mail, Phone, MapPin, DollarSign, Package, Printer } from "lucide-react";
 import { formatPrice } from "../../utils/currency";
 import { API_BASE_URL } from "../../config";
 import { toast } from "sonner";
@@ -49,6 +49,235 @@ export function AdminOrders() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+
+  const handlePrintInvoice = (order: Order) => {
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "absolute";
+    iframe.style.width = "0px";
+    iframe.style.height = "0px";
+    iframe.style.border = "none";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow?.document;
+    if (!doc) return;
+
+    doc.open();
+    doc.write(`
+      <html>
+        <head>
+          <title>${isRtl ? "فاتورة رقم" : "Invoice #"} ${order.id}</title>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap');
+            body {
+              font-family: ${isRtl ? "'Cairo', sans-serif" : "'Inter', sans-serif"};
+              direction: ${isRtl ? "rtl" : "ltr"};
+              padding: 40px;
+              color: #333;
+              background-color: #fff;
+              line-height: 1.6;
+            }
+            .invoice-container {
+              max-width: 800px;
+              margin: 0 auto;
+            }
+            .invoice-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              border-bottom: 3px solid #6b7a3e;
+              padding-bottom: 20px;
+              margin-bottom: 30px;
+            }
+            .company-logo {
+              font-size: 26px;
+              font-weight: 700;
+              color: #1a3038;
+            }
+            .company-details {
+              font-size: 13px;
+              color: #666;
+              text-align: ${isRtl ? "left" : "right"};
+            }
+            .invoice-title {
+              font-size: 32px;
+              font-weight: 700;
+              color: #6b7a3e;
+              margin: 0;
+            }
+            .invoice-meta {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 20px;
+              margin-bottom: 30px;
+              font-size: 14px;
+            }
+            .meta-group h4 {
+              margin: 0 0 8px 0;
+              color: #6b7a3e;
+              font-weight: 700;
+              border-bottom: 1px solid #eee;
+              padding-bottom: 4px;
+            }
+            .meta-group p {
+              margin: 0;
+              color: #555;
+              line-height: 1.6;
+            }
+            .items-table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 30px;
+              margin-top: 10px;
+            }
+            .items-table th {
+              background-color: #f7f9fa;
+              border-bottom: 2px solid #ddd;
+              padding: 12px;
+              text-align: ${isRtl ? "right" : "left"};
+              font-weight: 700;
+              color: #1a3038;
+            }
+            .items-table td {
+              padding: 12px;
+              border-bottom: 1px solid #eee;
+              color: #555;
+            }
+            .items-table .text-right {
+              text-align: ${isRtl ? "left" : "right"};
+            }
+            .invoice-summary {
+              display: flex;
+              justify-content: flex-end;
+              margin-top: 20px;
+            }
+            .summary-table {
+              width: 300px;
+              border-collapse: collapse;
+            }
+            .summary-table td {
+              padding: 8px 12px;
+              font-size: 14px;
+            }
+            .summary-table tr.total-row td {
+              font-weight: 700;
+              font-size: 18px;
+              color: #6b7a3e;
+              border-top: 2px solid #6b7a3e;
+              padding-top: 12px;
+            }
+            .footer {
+              margin-top: 60px;
+              text-align: center;
+              font-size: 13px;
+              color: #888;
+              border-top: 1px dashed #ddd;
+              padding-top: 20px;
+            }
+            @media print {
+              body { padding: 0; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="invoice-container">
+            <div class="invoice-header">
+              <div>
+                <h1 class="invoice-title">${isRtl ? "فاتورة ضريبية" : "TAX INVOICE"}</h1>
+                <div style="margin-top: 8px; font-size: 15px; color: #555;">
+                  <strong>${isRtl ? "رقم الفاتورة:" : "Invoice No:"}</strong> #${order.id}
+                </div>
+              </div>
+              <div class="company-details">
+                <div class="company-logo">${isRtl ? "مجموعة العماد" : "AL EMAD GROUP"}</div>
+                <div>${isRtl ? "القاهرة، جمهورية مصر العربية" : "Cairo, Arab Republic of Egypt"}</div>
+                <div>support@alemadgroup.com</div>
+              </div>
+            </div>
+
+            <div class="invoice-meta">
+              <div class="meta-group">
+                <h4>${isRtl ? "تفاصيل الشحن:" : "Shipping Details:"}</h4>
+                <p>
+                  <strong>${order.firstName} ${order.lastName}</strong><br>
+                  ${order.address}<br>
+                  ${order.city}, ${order.state} ${order.zipCode}<br>
+                  <strong>${isRtl ? "الهاتف:" : "Phone:"}</strong> ${order.phone}<br>
+                  <strong>${isRtl ? "البريد الإلكتروني:" : "Email:"}</strong> ${order.email}
+                </p>
+              </div>
+              <div class="meta-group" style="text-align: ${isRtl ? "left" : "right"};">
+                <h4>${isRtl ? "معلومات الفاتورة:" : "Invoice Information:"}</h4>
+                <p>
+                  <strong>${isRtl ? "تاريخ الطلب:" : "Order Date:"}</strong> ${new Date(order.orderDate).toLocaleDateString(isRtl ? 'ar-EG' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}<br>
+                  <strong>${isRtl ? "طريقة الدفع:" : "Payment Method:"}</strong> ${isRtl ? "الدفع عند الاستلام (COD)" : "Cash on Delivery (COD)"}<br>
+                  <strong>${isRtl ? "حالة الطلب الحالية:" : "Current Status:"}</strong> ${isRtl ? getStatusText(order.status) : order.status}
+                </p>
+              </div>
+            </div>
+
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>${isRtl ? "المنتج" : "Item Description"}</th>
+                  <th>${isRtl ? "الحجم" : "Size"}</th>
+                  <th class="text-right">${isRtl ? "سعر الوحدة" : "Unit Price"}</th>
+                  <th class="text-right" style="text-align: center;">${isRtl ? "الكمية" : "Qty"}</th>
+                  <th class="text-right">${isRtl ? "الإجمالي" : "Total"}</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${order.orderItems.map((item, index) => {
+                  const name = isRtl ? (item.productNameAr || item.productName) : item.productName;
+                  return `
+                    <tr>
+                      <td>${index + 1}</td>
+                      <td><strong>${name}</strong></td>
+                      <td>${item.size || "-"}</td>
+                      <td class="text-right">${formatPrice(item.price, language)}</td>
+                      <td class="text-right" style="text-align: center;">${item.quantity}</td>
+                      <td class="text-right">${formatPrice(item.price * item.quantity, language)}</td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+
+            <div class="invoice-summary">
+              <table class="summary-table">
+                <tr>
+                  <td>${isRtl ? "المجموع الفرعي:" : "Subtotal:"}</td>
+                  <td class="text-right">${formatPrice(order.totalAmount, language)}</td>
+                </tr>
+                <tr>
+                  <td>${isRtl ? "مصاريف الشحن:" : "Shipping Costs:"}</td>
+                  <td class="text-right">${isRtl ? "مجاني" : "Free"}</td>
+                </tr>
+                <tr class="total-row">
+                  <td>${isRtl ? "الإجمالي الكلي:" : "Total Amount:"}</td>
+                  <td class="text-right">${formatPrice(order.totalAmount, language)}</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="footer">
+              <p>${isRtl ? "شكرًا لتعاملكم معنا ونتطلع لخدمتكم مرة أخرى!" : "Thank you for your business! We look forward to serving you again."}</p>
+              <p style="font-size: 11px; margin-top: 5px;">${isRtl ? "تم إنشاء هذه الفاتورة إلكترونياً." : "This is an electronically generated invoice."}</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `);
+    doc.close();
+
+    // Trigger printing once loaded
+    setTimeout(() => {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+      document.body.removeChild(iframe);
+    }, 500);
+  };
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -231,17 +460,28 @@ export function AdminOrders() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <button
-                        onClick={() => {
-                          setSelectedOrder(order);
-                          setIsModalOpen(true);
-                        }}
-                        className="p-2.5 bg-petroleum-blue/40 hover:bg-teal-accent hover:text-white rounded-xl text-sage-green-light transition-all flex items-center gap-1.5"
-                        title={isRtl ? "عرض تفاصيل الطلب" : "View Order Details"}
-                      >
-                        <Eye className="w-4 h-4" />
-                        <span className="text-xs font-medium">{isRtl ? "عرض" : "View"}</span>
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setIsModalOpen(true);
+                          }}
+                          className="p-2.5 bg-petroleum-blue/40 hover:bg-teal-accent hover:text-white rounded-xl text-sage-green-light transition-all flex items-center gap-1.5"
+                          title={isRtl ? "عرض تفاصيل الطلب" : "View Order Details"}
+                        >
+                          <Eye className="w-4 h-4" />
+                          <span className="text-xs font-medium">{isRtl ? "عرض" : "View"}</span>
+                        </button>
+                        
+                        <button
+                          onClick={() => handlePrintInvoice(order)}
+                          className="p-2.5 bg-petroleum-blue/40 hover:bg-olive-green hover:text-white rounded-xl text-sage-green-light transition-all flex items-center gap-1.5"
+                          title={isRtl ? "طباعة الفاتورة" : "Print Invoice"}
+                        >
+                          <Printer className="w-4 h-4" />
+                          <span className="text-xs font-medium">{isRtl ? "طباعة" : "Print"}</span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -283,7 +523,14 @@ export function AdminOrders() {
                   #{selectedOrder.id}
                 </h2>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <button
+                  onClick={() => handlePrintInvoice(selectedOrder)}
+                  className="px-4 py-1.5 bg-olive-green hover:bg-dark-olive text-white rounded-full transition-all flex items-center gap-1.5 text-xs font-medium shadow-md"
+                >
+                  <Printer className="w-4 h-4" />
+                  <span>{isRtl ? "طباعة الفاتورة" : "Print Invoice"}</span>
+                </button>
                 <span className="text-sm text-sage-green-light">{isRtl ? "حالة الطلب الحالية:" : "Current Status:"}</span>
                 <span className={`px-4 py-1.5 rounded-full text-xs font-bold ${getStatusColor(selectedOrder.status)}`}>
                   {getStatusText(selectedOrder.status)}

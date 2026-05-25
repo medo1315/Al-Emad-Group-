@@ -292,9 +292,7 @@ export function HomePage() {
             alt="AL EMAD GROUP Logo"
             className="w-32 h-32 mx-auto mb-8 object-contain bg-white/10 backdrop-blur-sm rounded-2xl p-4 shadow-2xl border-2 border-teal-accent/30"
           />
-          <h2 className="font-display text-4xl lg:text-5xl text-white mb-6">
-            {t("establishedForOlives")}
-          </h2>
+
           <p className="text-lg lg:text-xl text-sage-green-light max-w-3xl mx-auto mb-8 leading-relaxed">
             {t("heritageDesc")}
           </p>

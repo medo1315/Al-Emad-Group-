@@ -23,7 +23,6 @@ export function Footer() {
               />
               <div>
                 <h3 className="font-display text-xl">AL EMAD GROUP</h3>
-                <p className="text-xs text-teal-accent">{t("establishedForOlives")}</p>
               </div>
             </div>
             <p className="text-sm text-white/70 leading-relaxed font-sans">

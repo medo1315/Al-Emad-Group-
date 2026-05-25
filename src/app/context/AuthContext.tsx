@@ -52,6 +52,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   }, []);
 
+  // Global fetch interceptor to catch "user not found" errors and redirect to login
+  useEffect(() => {
+    const originalFetch = window.fetch;
+    window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const response = await originalFetch(input, init);
+      
+      if (!response.ok) {
+        try {
+          const clone = response.clone();
+          const data = await clone.json();
+          const errorMsg = (data.message || "").toLowerCase();
+          
+          if (errorMsg.includes("user not found") || errorMsg.includes("usernotfound")) {
+            // Clear auth state
+            setUser(null);
+            localStorage.removeItem("al_emad_user");
+            
+            // Show toast message
+            toast.error(
+              isRtl 
+                ? "انتهت الجلسة أو المستخدم غير موجود. يرجى تسجيل الدخول مرة أخرى." 
+                : "Session expired or user not found. Please log in again."
+            );
+            
+            // Redirect to login page if not already on an auth or password recovery page
+            const currentPath = window.location.pathname;
+            const isAuthPage = 
+              currentPath === "/login" || 
+              currentPath === "/register" || 
+              currentPath === "/forgot-password" || 
+              currentPath === "/admin/login";
+
+            if (!isAuthPage) {
+              if (currentPath.startsWith("/admin")) {
+                window.location.href = "/admin/login";
+              } else {
+                window.location.href = "/login";
+              }
+            }
+          }
+        } catch (e) {
+          // If response body is not JSON or does not have a message, ignore
+        }
+      }
+      return response;
+    };
+
+    return () => {
+      window.fetch = originalFetch;
+    };
+  }, [isRtl]);
+
+
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await fetch(`${AUTH_API_URL}/login`, {

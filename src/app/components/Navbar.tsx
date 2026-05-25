@@ -48,7 +48,6 @@ export function Navbar() {
                 <h1 className="font-display text-xl text-white leading-none font-bold tracking-tight">
                   AL EMAD GROUP
                 </h1>
-                <p className="text-[10px] text-teal-accent uppercase tracking-widest mt-0.5">{t("establishedForOlives")}</p>
               </div>
             </Link>
 
@@ -58,11 +57,10 @@ export function Navbar() {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`text-sm tracking-wide px-6 py-2.5 rounded-full transition-all duration-300 font-semibold ${
-                    isActive(link.path)
+                  className={`text-sm tracking-wide px-6 py-2.5 rounded-full transition-all duration-300 font-semibold ${isActive(link.path)
                       ? "bg-gradient-to-r from-teal-accent to-sage-green text-dark-olive shadow-lg scale-105"
                       : "text-white/80 hover:text-white hover:bg-white/5"
-                  }`}
+                    }`}
                 >
                   {link.label}
                 </Link>
@@ -115,11 +113,10 @@ export function Navbar() {
                 {isAuthenticated && (
                   <Link
                     to="/my-orders"
-                    className={`relative w-12 h-12 rounded-full border transition-all duration-300 flex items-center justify-center ${
-                      isActive("/my-orders")
+                    className={`relative w-12 h-12 rounded-full border transition-all duration-300 flex items-center justify-center ${isActive("/my-orders")
                         ? "bg-gradient-to-r from-teal-accent to-sage-green text-dark-olive border-teal-accent shadow-lg scale-105"
                         : "bg-white/5 border-white/10 hover:border-teal-accent/30 text-white/90 hover:text-teal-accent"
-                    }`}
+                      }`}
                     title={language === "ar" ? "طلباتي" : "My Orders"}
                   >
                     <ShoppingBag className="w-4.5 h-4.5" />
@@ -158,15 +155,14 @@ export function Navbar() {
 
       {/* Mobile Bottom Tab Bar Navigation (App-like navigation) */}
       <nav className="lg:hidden fixed bottom-4 left-4 right-4 z-50 h-16 rounded-2xl bg-[#1e241e]/85 backdrop-blur-lg border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] flex items-center justify-between px-1 py-1 transition-all duration-300">
-        
+
         {/* Home Tab */}
         <Link
           to="/"
-          className={`flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${
-            isActive("/") 
-              ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20" 
+          className={`flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${isActive("/")
+              ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20"
               : "text-white/60 hover:text-white"
-          }`}
+            }`}
         >
           <Home className="w-5 h-5" />
           <span className="text-[9px] sm:text-[10px] font-medium mt-1 whitespace-nowrap">{t("home")}</span>
@@ -175,11 +171,10 @@ export function Navbar() {
         {/* Products Tab */}
         <Link
           to="/products"
-          className={`flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${
-            isActive("/products") 
-              ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20" 
+          className={`flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${isActive("/products")
+              ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20"
               : "text-white/60 hover:text-white"
-          }`}
+            }`}
         >
           <ShoppingBag className="w-5 h-5" />
           <span className="text-[9px] sm:text-[10px] font-medium mt-1 whitespace-nowrap">{t("products")}</span>
@@ -188,11 +183,10 @@ export function Navbar() {
         {/* Cart Tab */}
         <Link
           to="/cart"
-          className={`relative flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${
-            isActive("/cart") 
-              ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20" 
+          className={`relative flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${isActive("/cart")
+              ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20"
               : "text-white/60 hover:text-white"
-          }`}
+            }`}
         >
           <ShoppingCart className="w-5 h-5" />
           {itemCount > 0 && (
@@ -206,11 +200,10 @@ export function Navbar() {
         {/* About Tab */}
         <Link
           to="/about"
-          className={`flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${
-            isActive("/about") 
-              ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20" 
+          className={`flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${isActive("/about")
+              ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20"
               : "text-white/60 hover:text-white"
-          }`}
+            }`}
         >
           <Info className="w-5 h-5" />
           <span className="text-[9px] sm:text-[10px] font-medium mt-1 whitespace-nowrap">{t("about")}</span>
@@ -220,11 +213,10 @@ export function Navbar() {
         {isAuthenticated ? (
           <Link
             to="/my-orders"
-            className={`flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${
-              isActive("/my-orders") 
-                ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20" 
+            className={`flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${isActive("/my-orders")
+                ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20"
                 : "text-white/60 hover:text-white"
-            }`}
+              }`}
           >
             <ShoppingBag className="w-5 h-5" />
             <span className="text-[9px] sm:text-[10px] font-medium mt-1 whitespace-nowrap">{language === "ar" ? "طلباتي" : "Orders"}</span>
@@ -232,11 +224,10 @@ export function Navbar() {
         ) : (
           <Link
             to={loginRedirectPath}
-            className={`flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${
-              isActive("/login") 
-                ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20" 
+            className={`flex flex-col items-center justify-center flex-1 h-12 rounded-xl transition-all duration-300 ${isActive("/login")
+                ? "text-teal-accent scale-105 bg-teal-accent/10 border border-teal-accent/20"
                 : "text-white/60 hover:text-white"
-            }`}
+              }`}
           >
             <User className="w-5 h-5" />
             <span className="text-[9px] sm:text-[10px] font-medium mt-1 whitespace-nowrap">{t("login")}</span>

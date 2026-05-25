@@ -341,7 +341,45 @@ export function CheckoutPage() {
       setIsProcessing(false);
       navigate("/");
     } catch (e: any) {
-      console.error(e);
+      console.error("Order placement error, verifying status:", e);
+      
+      // Verify if order was actually created on backend despite the network error
+      try {
+        toast.info(language === "ar" ? "جاري التحقق من حالة الطلب على الخادم..." : "Verifying order status on server...");
+        // Wait 2 seconds to allow the server transaction to complete
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        const checkResponse = await fetch(`${API_BASE_URL}/orders/my-orders`, {
+          headers: {
+            "Authorization": `Bearer ${user?.token}`
+          }
+        });
+        
+        if (checkResponse.ok) {
+          const recentOrders = await checkResponse.json();
+          const now = new Date().getTime();
+          
+          // Check for an order created in the last 3 minutes with matching total amount
+          const duplicateOrder = recentOrders.find((ord: any) => {
+            const orderTime = new Date(ord.orderDate).getTime();
+            const timeDiff = Math.abs(now - orderTime);
+            const amountMatches = Math.abs(ord.totalAmount - finalTotal) < 1; // Difference less than 1 EGP
+            return timeDiff < 180000 && amountMatches;
+          });
+          
+          if (duplicateOrder) {
+            console.log("Order found on server, treating as success:", duplicateOrder);
+            toast.success(t("checkoutSuccess"));
+            clearCart();
+            setIsProcessing(false);
+            navigate("/my-orders");
+            return;
+          }
+        }
+      } catch (checkError) {
+        console.error("Error verifying recent orders:", checkError);
+      }
+
       toast.error(e.message || (language === "ar" ? "فشل إتمام الطلب." : "Failed to place the order."));
       setIsProcessing(false);
     }
