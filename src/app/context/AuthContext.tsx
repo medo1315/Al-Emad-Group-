@@ -177,6 +177,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(user?.token ? { "Authorization": `Bearer ${user.token}` } : {}),
         },
         body: JSON.stringify({ fullName, email, password }),
       });
@@ -187,16 +188,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error(translateError(data.message || "Admin registration failed.", isRtl));
       }
 
-      const userData: User = {
-        token: data.token,
-        email: data.email,
-        fullName: data.fullName,
-        roles: data.roles,
-        expiresAt: data.expiresAt,
-      };
-
-      setUser(userData);
-      localStorage.setItem("al_emad_user", JSON.stringify(userData));
+      // Do NOT update the current user session - we're just creating a new admin account
+      // The currently logged-in admin should remain logged in
       return true;
     } catch (error: any) {
       toast.error(error.message || translateError("Connection to server failed.", isRtl));
