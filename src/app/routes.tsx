@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import { RootLayout } from "./layouts/RootLayout";
 import { AdminLayout } from "./layouts/AdminLayout";
+import { AdminGuard } from "./components/AdminGuard";
 import { HomePage } from "./pages/HomePage";
 import { ProductsPage } from "./pages/ProductsPage";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage";
@@ -52,7 +53,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    Component: AdminLayout,
+    element: <AdminGuard><AdminLayout /></AdminGuard>,
     children: [
       { index: true, Component: AdminDashboard },
       { path: "orders", Component: AdminOrders },
